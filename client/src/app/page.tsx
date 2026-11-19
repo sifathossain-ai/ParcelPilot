@@ -74,20 +74,20 @@ export default function LandingPage() {
               </button>
             </div>
 
-            <Link
-              href="/login"
+            <a
+              href="#"
               className="hidden lg:inline-flex px-4 py-2 text-sm font-semibold text-brand-dark hover:text-brand-blue transition-colors"
             >
               Log In
-            </Link>
+            </a>
 
-            <Link
-              href="/register"
+            <a
+              href="#pricing"
               className="bg-brand-green hover:bg-brand-green-hover text-brand-dark font-bold text-sm px-4 sm:px-5 py-2.5 rounded-xl shadow-md shadow-brand-green/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-1.5 sm:gap-2"
             >
               <span>Get Started Free</span>
               <span className="material-symbols-outlined text-base">arrow_forward</span>
-            </Link>
+            </a>
 
             {/* Mobile Hamburger Button */}
             <button
@@ -165,12 +165,12 @@ export default function LandingPage() {
                   বাংলা
                 </button>
               </div>
-              <Link
-                href="/login"
+              <a
+                href="#"
                 className="text-sm font-semibold text-brand-dark hover:text-brand-blue"
               >
                 Log In
-              </Link>
+              </a>
             </div>
           </div>
         )}
@@ -208,13 +208,13 @@ export default function LandingPage() {
               </p>
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto pt-1">
-                <Link
-                  href="/register"
+                <a
+                  href="#pricing"
                   className="bg-brand-green hover:bg-brand-green-hover text-brand-dark font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-brand-green/20 transition-all flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-lg">bolt</span>
                   <span>Start Free Trial</span>
-                </Link>
+                </a>
                 <a
                   href="#how-it-works"
                   className="bg-white hover:bg-slate-50 text-brand-dark border border-brand-border font-semibold text-sm px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-xs"
@@ -643,13 +643,13 @@ export default function LandingPage() {
                 Eliminate manual typing errors and lower return fees today. Join thousands of Bangladeshi F-commerce sellers shipping faster.
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-                <Link
-                  href="/register"
+                <a
+                  href="#pricing"
                   className="bg-brand-green hover:bg-brand-green-hover text-brand-dark font-bold text-sm px-7 py-3.5 rounded-xl shadow-md shadow-brand-green/20 transition-all flex items-center justify-center gap-2"
                 >
                   <span>Start Shipping Free</span>
                   <span className="material-symbols-outlined text-base">arrow_forward</span>
-                </Link>
+                </a>
                 <span className="text-xs text-slate-400 sm:ml-2">
                   100 free orders/mo • No credit card required
                 </span>
@@ -732,12 +732,12 @@ export default function LandingPage() {
                   </li>
                 </ul>
               </div>
-              <Link
-                href="/register"
+              <a
+                href="#pricing"
                 className="mt-8 w-full bg-slate-100 hover:bg-slate-200 text-brand-dark font-bold text-sm py-3 rounded-xl transition-colors text-center block"
               >
                 Get Started Free
-              </Link>
+              </a>
             </div>
 
             {/* Pro Tier (Popular) */}
@@ -782,12 +782,12 @@ export default function LandingPage() {
                   </li>
                 </ul>
               </div>
-              <Link
-                href="/register"
+              <a
+                href="#pricing"
                 className="mt-8 w-full bg-brand-green hover:bg-brand-green-hover text-brand-dark font-extrabold text-sm py-3 rounded-xl shadow-md shadow-brand-green/25 transition-all text-center block"
               >
                 Start 14-Day Pro Trial
-              </Link>
+              </a>
             </div>
 
             {/* Scale Tier */}
@@ -825,12 +825,12 @@ export default function LandingPage() {
                   </li>
                 </ul>
               </div>
-              <Link
-                href="/register"
+              <a
+                href="#contact"
                 className="mt-8 w-full bg-slate-100 hover:bg-slate-200 text-brand-dark font-bold text-sm py-3 rounded-xl transition-colors text-center block"
               >
                 Contact Enterprise Sales
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -857,13 +857,13 @@ export default function LandingPage() {
                 Stop losing hours to manual typing and return penalties. Join thousands of smart Bangladeshi sellers dispatching parcels effortlessly.
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-                <Link
-                  href="/register"
+                <a
+                  href="#pricing"
                   className="bg-brand-green hover:bg-brand-green-hover text-brand-dark font-black text-base px-8 py-4 rounded-xl shadow-lg shadow-brand-green/30 transition-all flex items-center justify-center gap-2"
                 >
                   <span>Start Shipping Smarter Now</span>
                   <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                </Link>
+                </a>
               </div>
               <p className="text-xs text-slate-400">
                 ✨ Free 100 AI Address Extractions every month • bKash and Nagad verified
