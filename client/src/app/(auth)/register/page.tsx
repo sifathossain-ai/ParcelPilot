@@ -755,7 +755,7 @@ export default function RegisterPage() {
             </form>
           </div>
 
-          {/* Bottom Sign In & Trust Signals */}
+          {/* Bottom Sign In */}
           <div className="mt-5 text-center flex flex-col items-center gap-2">
             <div className="flex items-center gap-1.5 text-[14px]">
               <span className="text-[#3c4a3d]">{t.alreadyHaveAccount}</span>
@@ -766,53 +766,9 @@ export default function RegisterPage() {
                 {t.signIn}
               </Link>
             </div>
-            <div className="flex items-center gap-3 text-[#3c4a3d] text-[12px] font-medium">
-              <span className="inline-flex items-center gap-1">
-                <span className="material-symbols-outlined text-[15px] text-[#006d32]">
-                  security
-                </span>
-                {t.encrypted}
-              </span>
-              <span aria-hidden="true">•</span>
-              <span className="inline-flex items-center gap-1">
-                <span className="material-symbols-outlined text-[15px] text-[#0059bb]">
-                  hub
-                </span>
-                {t.steadfastReady}
-              </span>
-            </div>
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="w-full py-5 bg-[#f8f9ff]">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-8 text-[12px] font-medium text-[#3c4a3d]">
-          <span>{t.copyright}</span>
-          <div className="flex items-center gap-5">
-            <button
-              type="button"
-              onClick={() => setLegalModal('privacy')}
-              className="hover:text-[#0b1c30] transition-colors cursor-pointer"
-            >
-              {t.privacyLink}
-            </button>
-            <button
-              type="button"
-              onClick={() => setLegalModal('terms')}
-              className="hover:text-[#0b1c30] transition-colors cursor-pointer"
-            >
-              {t.termsLink}
-            </button>
-            <Link
-              href="/#integration"
-              className="hover:text-[#0b1c30] transition-colors"
-            >
-              {t.courierIntegrations}
-            </Link>
-          </div>
-        </div>
-      </footer>
 
       {/* Terms / Privacy Info Modal */}
       {legalModal && (
