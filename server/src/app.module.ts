@@ -22,10 +22,10 @@ import { Order } from './orders/entities/order.entity';
       useFactory: (config: ConfigService) => ({
         type: 'postgres',
         host: config.get<string>('DB_HOST', 'localhost'),
-        port: config.get<number>('DB_PORT', 5432),
+        port: Number(config.get('DB_PORT', 5432)),
         username: config.get<string>('DB_USERNAME', 'postgres'),
         password: config.get<string>('DB_PASSWORD', 'postgres'),
-        database: config.get<string>('DB_NAME', 'parcelpilot'),
+        database: config.get<string>('DB_DATABASE') || config.get<string>('DB_NAME', 'parcelpilot'),
         entities: [User, Order],
         synchronize: true, // Auto schema sync for development
       }),
