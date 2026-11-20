@@ -2,6 +2,14 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { resolveJwtSecret } from '../jwt-secret.util';
+
+interface JwtPayload {
+  sub: string;
+  email: string;
+  fullName?: string;
+  shopName: string;
+}
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -9,11 +17,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET') || 'parcelpilot_secret_key_2026',
+      secretOrKey: resolveJwtSecret(configService),
     });
   }
 
-  async validate(payload: any) {
-    return { userId: payload.sub, email: payload.email, shopName: payload.shopName };
+  async validate(payload: JwtPayload) {
+    return {
+      userId: payload.sub,
+      email: payload.email,
+      fullName: payload.fullName ?? '',
+      shopName: payload.shopName,
+    };
   }
 }

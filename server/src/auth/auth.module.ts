@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { User } from '../users/entities/user.entity';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { resolveJwtSecret } from './jwt-secret.util';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET') || 'parcelpilot_secret_key_2026',
+        secret: resolveJwtSecret(configService),
         signOptions: { expiresIn: '7d' },
       }),
     }),

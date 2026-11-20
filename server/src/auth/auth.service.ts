@@ -1,4 +1,9 @@
-import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  UnauthorizedException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -6,6 +11,8 @@ import * as bcrypt from 'bcryptjs';
 import { User } from '../users/entities/user.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+
+const BCRYPT_SALT_ROUNDS = 12;
 
 @Injectable()
 export class AuthService {
@@ -16,24 +23,41 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
+    const normalizedEmail = registerDto.email.trim().toLowerCase();
+
     const existingUser = await this.userRepository.findOne({
-      where: { email: registerDto.email },
+      where: { email: normalizedEmail },
     });
     if (existingUser) {
-      throw new BadRequestException('User with this email already exists');
+      throw new ConflictException('An account with this email already exists');
     }
 
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(registerDto.password, saltRounds);
+    const passwordHash = await bcrypt.hash(
+      registerDto.password,
+      BCRYPT_SALT_ROUNDS,
+    );
 
     const user = this.userRepository.create({
-      email: registerDto.email,
+      fullName: registerDto.fullName.trim(),
+      shopName: registerDto.shopName.trim(),
+      email: normalizedEmail,
       passwordHash,
-      shopName: registerDto.shopName,
-      phone: registerDto.phone,
+      phone: registerDto.phone?.trim() || undefined,
     });
 
-    const savedUser = await this.userRepository.save(user);
+    let savedUser: User;
+    try {
+      savedUser = await this.userRepository.save(user);
+    } catch (error: unknown) {
+      const pgCode =
+        typeof error === 'object' && error !== null && 'code' in error
+          ? String((error as { code?: unknown }).code)
+          : undefined;
+      if (pgCode === '23505') {
+        throw new ConflictException('An account with this email already exists');
+      }
+      throw error;
+    }
 
     const token = this.generateToken(savedUser);
     return {
@@ -41,6 +65,7 @@ export class AuthService {
       token,
       user: {
         id: savedUser.id,
+        fullName: savedUser.fullName,
         email: savedUser.email,
         shopName: savedUser.shopName,
       },
@@ -48,10 +73,15 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-    const user = await this.userRepository.findOne({
-      where: { email: loginDto.email },
-    });
-    if (!user) {
+    const normalizedEmail = loginDto.email.trim().toLowerCase();
+
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.passwordHash')
+      .where('user.email = :email', { email: normalizedEmail })
+      .getOne();
+
+    if (!user || !user.passwordHash) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
@@ -66,14 +96,40 @@ export class AuthService {
       token,
       user: {
         id: user.id,
+        fullName: user.fullName,
         email: user.email,
         shopName: user.shopName,
       },
     };
   }
 
+  async getProfile(userId: string) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        shopName: true,
+        phone: true,
+        createdAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User account not found');
+    }
+
+    return { user };
+  }
+
   private generateToken(user: User): string {
-    const payload = { sub: user.id, email: user.email, shopName: user.shopName };
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      fullName: user.fullName,
+      shopName: user.shopName,
+    };
     return this.jwtService.sign(payload);
   }
 }

@@ -16,10 +16,13 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ select: false })
   passwordHash: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 100, default: '' })
+  fullName: string;
+
+  @Column({ type: 'varchar', length: 100 })
   shopName: string;
 
   @Column({ nullable: true })
