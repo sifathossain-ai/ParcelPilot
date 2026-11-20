@@ -10,6 +10,11 @@ export interface RegisterPayload {
   termsAccepted: boolean;
 }
 
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
 export interface AuthUser {
   id: string;
   fullName: string;
@@ -25,6 +30,14 @@ export interface AuthResponse {
 
 const TOKEN_STORAGE_KEY = 'parcelpilot_token';
 const USER_STORAGE_KEY = 'parcelpilot_user';
+const REMEMBER_EMAIL_KEY = 'parcelpilot_remember_email';
+
+export async function loginMerchant(
+  payload: LoginPayload,
+): Promise<AuthResponse> {
+  const { data } = await api.post<AuthResponse>('/auth/login', payload);
+  return data;
+}
 
 export async function registerMerchant(
   payload: RegisterPayload,
@@ -33,7 +46,11 @@ export async function registerMerchant(
   return data;
 }
 
-export function saveAuthSession(token: string, user: AuthUser): void {
+export function saveAuthSession(
+  token: string,
+  user: AuthUser,
+  remember = true,
+): void {
   if (typeof window === 'undefined') return;
   localStorage.setItem(TOKEN_STORAGE_KEY, token);
   localStorage.setItem(
@@ -45,6 +62,11 @@ export function saveAuthSession(token: string, user: AuthUser): void {
       shopName: user.shopName,
     }),
   );
+  if (remember) {
+    localStorage.setItem(REMEMBER_EMAIL_KEY, user.email);
+  } else {
+    localStorage.removeItem(REMEMBER_EMAIL_KEY);
+  }
 }
 
 export function getStoredUser(): AuthUser | null {

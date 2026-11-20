@@ -74,12 +74,12 @@ export default function LandingPage() {
               </button>
             </div>
 
-            <a
-              href="#"
+            <Link
+              href="/login"
               className="hidden lg:inline-flex px-4 py-2 text-sm font-semibold text-brand-dark hover:text-brand-blue transition-colors"
             >
               Log In
-            </a>
+            </Link>
 
             <Link
               href="/register"
@@ -165,12 +165,12 @@ export default function LandingPage() {
                   বাংলা
                 </button>
               </div>
-              <a
-                href="#"
+              <Link
+                href="/login"
                 className="text-sm font-semibold text-brand-dark hover:text-brand-blue"
               >
                 Log In
-              </a>
+              </Link>
             </div>
           </div>
         )}
