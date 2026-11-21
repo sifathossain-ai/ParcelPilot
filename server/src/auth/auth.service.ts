@@ -103,6 +103,64 @@ export class AuthService {
     };
   }
 
+  async validateOAuthUser(profile: {
+    googleId: string;
+    email: string;
+    fullName: string;
+    avatarUrl?: string;
+  }) {
+    const normalizedEmail = (profile.email || '').trim().toLowerCase();
+    if (!normalizedEmail) {
+      throw new UnauthorizedException('Google account must have an email address');
+    }
+
+    let user = await this.userRepository.findOne({
+      where: [{ email: normalizedEmail }, { googleId: profile.googleId }],
+    });
+
+    if (user) {
+      let needsUpdate = false;
+      if (!user.googleId) {
+        user.googleId = profile.googleId;
+        needsUpdate = true;
+      }
+      if (profile.avatarUrl && !user.avatarUrl) {
+        user.avatarUrl = profile.avatarUrl;
+        needsUpdate = true;
+      }
+      if (!user.fullName && profile.fullName) {
+        user.fullName = profile.fullName;
+        needsUpdate = true;
+      }
+      if (needsUpdate) {
+        user = await this.userRepository.save(user);
+      }
+    } else {
+      user = this.userRepository.create({
+        email: normalizedEmail,
+        fullName: profile.fullName || 'Google Merchant',
+        shopName: `${profile.fullName || 'Merchant'}'s Store`,
+        googleId: profile.googleId,
+        avatarUrl: profile.avatarUrl,
+        provider: 'google',
+      });
+      user = await this.userRepository.save(user);
+    }
+
+    const token = this.generateToken(user);
+    return {
+      message: 'Google authentication successful',
+      token,
+      user: {
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        shopName: user.shopName,
+        avatarUrl: user.avatarUrl,
+      },
+    };
+  }
+
   async getProfile(userId: string) {
     const user = await this.userRepository.findOne({
       where: { id: userId },

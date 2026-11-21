@@ -24,13 +24,18 @@ export default function LoginPage() {
   const [serverOffline, setServerOffline] = useState(false);
   const [showForgotModal, setShowForgotModal] = useState(false);
 
-  // Pre-load remembered email if available
+  // Pre-load remembered email and check for OAuth error
   useEffect(() => {
     const timer = setTimeout(() => {
       if (typeof window !== 'undefined') {
         const savedEmail = localStorage.getItem('parcelpilot_remember_email');
         if (savedEmail) {
           setEmail(savedEmail);
+        }
+        const params = new URLSearchParams(window.location.search);
+        const oauthError = params.get('error');
+        if (oauthError) {
+          setErrorMessage(decodeURIComponent(oauthError));
         }
       }
     }, 0);
@@ -178,24 +183,12 @@ export default function LoginPage() {
     }, 800);
   };
 
-  // Simulated Google Auth Handler
+  // Google OAuth Login Handler
   const handleGoogleLogin = () => {
     setIsGoogleLoading(true);
     setErrorMessage(null);
-
-    setTimeout(() => {
-      const googleUser: AuthUser = {
-        id: '202',
-        fullName: 'Google Merchant',
-        email: 'google.merchant@gmail.com',
-        shopName: 'Green Logistics Store',
-      };
-      saveAuthSession('google_oauth_token_2026', googleUser, rememberMe);
-      setSuccessMessage(t.authenticated);
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 600);
-    }, 900);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    window.location.href = `${apiUrl}/auth/google`;
   };
 
   return (

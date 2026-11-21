@@ -14,7 +14,7 @@ import { Order } from './orders/entities/order.entity';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: ['.env', 'server/.env'],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
