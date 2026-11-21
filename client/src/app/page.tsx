@@ -76,7 +76,7 @@ export default function LandingPage() {
 
             <Link
               href="/login"
-              className="hidden lg:inline-flex px-4 py-2 text-sm font-semibold text-brand-dark hover:text-brand-blue transition-colors"
+              className="hidden lg:inline-flex items-center px-4 py-2 text-sm font-semibold text-brand-dark hover:text-brand-blue hover:bg-slate-100 rounded-xl transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0"
             >
               Log In
             </Link>
@@ -167,7 +167,7 @@ export default function LandingPage() {
               </div>
               <Link
                 href="/login"
-                className="text-sm font-semibold text-brand-dark hover:text-brand-blue"
+                className="text-sm font-semibold text-brand-dark hover:text-brand-blue px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-all"
               >
                 Log In
               </Link>
