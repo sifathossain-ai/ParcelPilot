@@ -11,10 +11,13 @@ export default function DashboardPage() {
   const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
-    const currentUser = getStoredUser();
-    if (currentUser) {
-      setUser(currentUser);
-    }
+    const timer = setTimeout(() => {
+      const currentUser = getStoredUser();
+      if (currentUser) {
+        setUser(currentUser);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleLogout = () => {

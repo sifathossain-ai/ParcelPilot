@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import { loginMerchant, saveAuthSession, AuthUser } from '@/lib/auth';
 
 export default function LoginPage() {
@@ -25,17 +26,20 @@ export default function LoginPage() {
 
   // Pre-load remembered email and check for OAuth error
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedEmail = localStorage.getItem('parcelpilot_remember_email');
-      if (savedEmail) {
-        setEmail(savedEmail);
+    const timer = setTimeout(() => {
+      if (typeof window !== 'undefined') {
+        const savedEmail = localStorage.getItem('parcelpilot_remember_email');
+        if (savedEmail) {
+          setEmail(savedEmail);
+        }
+        const params = new URLSearchParams(window.location.search);
+        const oauthError = params.get('error');
+        if (oauthError) {
+          setErrorMessage(decodeURIComponent(oauthError));
+        }
       }
-      const params = new URLSearchParams(window.location.search);
-      const oauthError = params.get('error');
-      if (oauthError) {
-        setErrorMessage(decodeURIComponent(oauthError));
-      }
-    }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   // Translations dictionary for bilingual experience
@@ -128,15 +132,16 @@ export default function LoginPage() {
       setTimeout(() => {
         router.push('/dashboard');
       }, 700);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Login error:', err);
-      if (err.response?.data?.message) {
+      if (axios.isAxiosError(err) && err.response?.data) {
         // Backend specific error message
-        const msg = Array.isArray(err.response.data.message)
-          ? err.response.data.message.join(', ')
-          : err.response.data.message;
-        setErrorMessage(msg);
-      } else if (err.code === 'ERR_NETWORK' || !err.response) {
+        const responseData = err.response.data as { message?: string | string[] };
+        const msg = Array.isArray(responseData.message)
+          ? responseData.message.join(', ')
+          : responseData.message;
+        setErrorMessage(msg || 'Authentication failed. Please verify your credentials.');
+      } else if (axios.isAxiosError(err) && (err.code === 'ERR_NETWORK' || !err.response)) {
         // Backend server is not running
         setServerOffline(true);
         setErrorMessage(
@@ -146,7 +151,11 @@ export default function LoginPage() {
         );
       } else {
         setErrorMessage(
-          lang === 'EN' ? 'Authentication failed. Please verify your credentials.' : 'লগইন ব্যর্থ হয়েছে। তথ্য যাচাই করুন।'
+          err instanceof Error
+            ? err.message
+            : lang === 'EN'
+              ? 'Authentication failed. Please verify your credentials.'
+              : 'লগইন ব্যর্থ হয়েছে। তথ্য যাচাই করুন।'
         );
       }
     } finally {
@@ -416,7 +425,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-2 h-11 rounded-xl bg-[#00d166] hover:bg-[#00b858] active:scale-[0.99] text-[#00210b] font-bold text-sm flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
+                className="w-full mt-2 h-11 rounded-xl bg-[#00d166] hover:bg-[#00b858] hover:shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] text-[#00210b] font-bold text-sm flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {isLoading ? (
                   <>
