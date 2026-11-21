@@ -505,26 +505,6 @@ export default function LoginPage() {
       </main>
 
       {/* =========================================================================
-          FOOTER
-          ========================================================================= */}
-      <footer className="w-full py-5 bg-[#f8f9ff] border-t border-slate-100 text-center">
-        <div className="w-full max-w-7xl mx-auto px-4 text-center flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 text-xs text-[#64748b]">
-          <span>{t.copyright}</span>
-          <div className="flex items-center gap-4 font-medium">
-            <a href="#" className="hover:text-[#0b1c30] transition-colors">
-              {t.privacy}
-            </a>
-            <a href="#" className="hover:text-[#0b1c30] transition-colors">
-              {t.terms}
-            </a>
-            <a href="#" className="hover:text-[#0b1c30] transition-colors">
-              {t.couriers}
-            </a>
-          </div>
-        </div>
-      </footer>
-
-      {/* =========================================================================
           FORGOT PASSWORD MODAL
           ========================================================================= */}
       {showForgotModal && (
