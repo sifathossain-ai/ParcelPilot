@@ -7,6 +7,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { User } from '../users/entities/user.entity';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { resolveJwtSecret } from './jwt-secret.util';
 
 @Module({
@@ -23,7 +25,7 @@ import { resolveJwtSecret } from './jwt-secret.util';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [AuthService, JwtStrategy, PassportModule],
+  providers: [AuthService, JwtStrategy, GoogleStrategy, GoogleAuthGuard],
+  exports: [AuthService, JwtStrategy, GoogleStrategy, PassportModule],
 })
 export class AuthModule {}
